@@ -1,0 +1,32 @@
+##EJERCICIO 2 (8/ago/2017)
+##CREAR 3 VARIABLES DE 4 ENTRADAS. LAS VARIABLES DE NOMBRE:
+##facultad(economia,ingenieria,arquitectura y derecho)
+##licenciaturas (actuaria, ingenieria civil. arquitectura, derecho)
+##calificacion alumnos(6,4,10,8)
+
+facultad<-c("Economía","Ingeniería","Arquitectura","Derecho")
+licenciatura<-c("Actuaría","Ingenieria Civil", "Arquitectura","Derecho")
+calificacionAlumnos<-c(6,4,10,8)
+
+##verificar con R que tipo de variables son:
+##(numero y caracter)
+
+class(facultad)
+class(licenciatura)
+class(calificacionAlumnos)
+##borrar las variables facultad y licenciatura
+
+rm(facultad)
+rm(licenciatura)
+###graficar con pie la variable calificacion
+###incorporar los diversos argumentos utilizados en clase
+
+pie(calificacionAlumnos,calificacionAlumnos,
+    main="Gráfica de pie de 
+    la calificación de los alumnos", 
+    sub="Elaborado por: Jessica Nava Sánchez",
+    col=c("bisque2","cyan2", "darkolivegreen1", "hotpink"),
+    radius=1.5,
+    clockwise=TRUE,
+    lty=5)
+
