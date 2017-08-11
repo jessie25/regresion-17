@@ -1,0 +1,81 @@
+##############################11/08/2017#######################
+### para pegar un renglon a la matriz z (mi caso "datos")
+#rbind es para renglon
+datos<-rbind(datos,c(4,5,6,7)) 
+
+
+rownames(datos)<-c("escuela1", "escuela2","escuela3","escuela4","escuela5","escuela6")
+
+### para pegar una columna a la matriz z (mi caso "datos")
+#cbind es para la columna
+datos<-cbind(datos,c(14,25,36,47,99,81)) 
+colnames(datos)<-c("toluca","pachuca","gdl","mty","jocotitlan")
+
+##PARA CORRECCION DE DATOS
+datos["escuela1","jocotitlan"]<-28
+
+
+###############para multiplicar matrices se utiliza ---------%*%--------
+j%*%i
+###############para la transpuesta de una matriz se utiliza -----t()-----
+t(j)
+
+###########################################################################
+###########  DATA FRAME  #################
+###########################################################################
+nombres<-c("sergio","juan","rocio","jessica")#creo vectores
+edad<-c(30,43,21,18) ##creo vectores
+altura<-c(170,165,175,172) ##creo vectores
+salario<-c(3000,4500,2200,4300)##creo vectores
+
+basem<-data.frame(nombres,edad,altura,salario)  
+View(basem)
+basem[4,3]<-178 ##asignar el valor 178 a la posicion (renglon4,columna3)
+basem$salario*2.2->basem$salario ##multiplicacion de salario por 2.2
+peso<-c(83.2,75.2,69.3,70.5) ##nuevo vector
+
+basem<-data.frame(nombres,edad,altura,salario,peso)
+basem
+basem$peso*1.2->basem$peso
+round(basem$peso,3)->basem$peso # redondedo
+basem
+
+basem$escol<-c("prepa","lic","ninguno","prim")
+basem
+
+####################### incorporar la variable sexo
+basem$sexo<-c(1,1,2,2)
+basem
+
+
+
+####################### table con sexo
+table(basem$sexo)  ##tabla de frecuencias
+attach(basem) ##para decir que a partir de esta linea la basem sera 
+################la unica a la que se hace referencia
+
+table(sexo)
+detach(basem) ##para decir que se deja de usar la funcion -----attach----
+
+
+
+
+######################## INSTALAR PAQUETERIAS/LIBRERIAS
+install.packages("foreign") ##foreign----para exportar o importar bases de datos de STATA, SPSS, etc
+install.packages("questionr")## es para expandir frecuencias de bases de datos muestrales
+install.packages("car") ## es para regresion
+
+## tambien se pueden mandar a llamar de esta manera
+install.packages(C("foreign","questionr","car") 
+
+### dentro de cada paquete vienen multiples funciones que solo las podemos usar cuando
+### mandamos a llamar el paquete
+
+###### para mandar a llamar una paqueteria instalada, --------library()---------
+###### ------ require()------- son funciones equivalentes
+                 
+                    
+##para mandar a llamar las paqueterias/librerias
+library(foreign)
+library(questionr)
+library(car)
