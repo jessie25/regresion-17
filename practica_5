@@ -1,0 +1,34 @@
+#########################  -------------- PRACTICA 5----------
+#########################                15/08/2017
+require(foreign)
+mti2015<-read.dbf("C:/Users/SalaD-10/Desktop/mti2015_05_17_sdem_precodificado.DBF")
+table(mti2015$SEX) ##muestra cuantos hombre (1) y  mujeres(2) hay registrados en la base de datos
+
+require(questionr)
+wtd.table(mti2015$SEX,weights = mti2015$FAC_MTI) ##expandir datos
+
+##mostrar nombres de las variables
+ls(mti2015)
+##ploblacion
+sum(mti2015$FAC_MTI)
+##checando info de alguna variable 
+table(mti2015$R_DEF_ENOE)
+### para saber niveles de analfabetismo en niños
+table(mti2015$CS_P12)
+##expandiendo los datos anteriores del analfabetismo
+wtd.table(mti2015$CS_P12,weights = mti2015$FAC_MTI)
+
+wtd.table(mti2015$EDA,mti2015$CS_P12,weights = mti2015$FAC_MTI)
+
+### filtrar datos en este caso del estado me mexico
+edomex<- subset(mti2015,mti2015$ENT==15)
+edomexmuj<-subset(mti2015,mti2015$ENT==15 & mti2015$SEX==2)
+agzac<-subset(mti2015,mti2015$ENT=="01" | mti2015$ENT=="32")
+
+table(agzac$ENT)
+
+##PARA CAMBIAR UNA VARIABLE CARACTER A NUMERICA
+as.numeric(mti2015$ENT)
+class(mti2015$ENT)
+
+
