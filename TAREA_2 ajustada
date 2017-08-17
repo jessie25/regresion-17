@@ -1,0 +1,8 @@
+######################### TAREA 2 AJUSTADA ###############################
+##PARA CAMBIAR UNA VARIABLE CARACTER A NUMERICA
+mti2015$ENT<-as.numeric(mti2015$ENT)
+class(mti2015$ENT)
+
+##PARA CAMBIAR UNA VARIABLE  NUMERICA A CARACTER 
+mti2015$ENT<-as.character(mti2015$ENT)
+class(mti2015$ENT)
