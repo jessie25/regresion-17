@@ -1,0 +1,44 @@
+################### 17/08/2017
+
+#########OTRA FORMA PARA BAJAR BASE DE DATOS CON LA MISMA LOGICA 
+temporal<-tempfile()
+download.file("http://www.beta.inegi.org.mx/contenidos/proyectos/enchogares/modulos/mti/2015/microdatos/mti2015_bases_conapo_dbf.zip",temporal)
+files=unzip(temporal,list = TRUE)$Name
+unzip(temporal,files=files[grepl("dbf",files)])
+library(foreign)
+mti2015<-data.frame(read.dbf("mti2015_05_17_sdem_precodificado.DBF"))
+View(mti2015)
+ls(mti2015)
+class(mti2015$ENT)
+mti2015$ENT<-as.numeric(mti2015$ENT)
+
+
+## 3. etiquetar
+
+table(mti2015$CS_P15)
+
+#3.1 ETIQUETAR VARIABLES
+mti2015$CS_P15<-factor(mti2015$CS_P15,levels=c(1,2,3,4),labels = c("Primaria","Secundaia","Preparatoria","No sabe"))
+table(mti2015$CS_P15)
+
+########## EJERCICIO CON LA ETIQUETA RAMA
+table(mti2015$RAMA)
+mti2015$RAMA1<-factor(mti2015$RAMA,levels=c(1,2,3,4,5,6,7),labels = c("Agropecuario","Construcción","Industria manufacturera","Comercio","Servicios","Otros","No especificado"))
+table(mti2015$RAMA1)
+
+####recodificar
+mti2015$RAMA1<-as.numeric(mti2015$RAMA1)
+class(mti2015$RAMA1)
+mti2015$RAMA2[mti2015$RAMA1 == 1] <- 1
+mti2015$RAMA2[mti2015$RAMA1 == 2] <- 2
+mti2015$RAMA2[mti2015$RAMA1 == 3] <- 2
+mti2015$RAMA2[mti2015$RAMA1 == 4] <- 3
+mti2015$RAMA2[mti2015$RAMA1 == 5] <- 3
+mti2015$RAMA2[mti2015$RAMA1 == 6] <- 4
+mti2015$RAMA2[mti2015$RAMA1 == 7] <- 4
+
+table(mti2015$RAMA2)
+
+mti2015$RAMA2<-factor(mti2015$RAMA2,levels=c(1,2,3,4),labels = c("primario","secundario","terciario","NE"))
+
+table(mti2015$RAMA2)
