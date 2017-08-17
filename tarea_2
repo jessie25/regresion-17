@@ -1,0 +1,10 @@
+############################ TAREA ############
+##CONVERTIR UNA VARIABLE DE TIPO FACTOR (AS.NUMERIC) A TIPO CARACTER
+
+##PARA CAMBIAR UNA VARIABLE CARACTER A NUMERICA
+as.numeric(mti2015$ENT)
+class(mti2015$ENT)
+
+###PARA HACER LA VARIABLE CARACTER
+carac<-(as.character(as.numeric(mti2015$ENT)))
+class(carac)
