@@ -1,0 +1,60 @@
+############### PRACTICA 7 18/08/2017
+############### CORRECCION A RECODIFICAR 18/08/2017
+####recodificar
+mti2015$RAMA1<-as.numeric(mti2015$RAMA1)
+class(mti2015$RAMA1)
+mti2015$RAMA2[mti2015$RAMA1 == 1] <- 1
+mti2015$RAMA2[mti2015$RAMA1 == 2| mti2015$RAMA1 == 3] <- 2
+
+mti2015$RAMA2[mti2015$RAMA1 == 4 |mti2015$RAMA1 == 5] <- 3
+
+mti2015$RAMA2[mti2015$RAMA1 == 6|mti2015$RAMA1 == 7] <- 4
+
+table(mti2015$RAMA2)
+
+mti2015$RAMA2<-factor(mti2015$RAMA2,levels=c(1,2,3,4),labels = c("primario","secundario","terciario","NE"))
+
+table(mti2015$RAMA2)
+
+
+###################################### EJERCICIO 2
+## Recodificar la variable EDA en una nueva variable que se llame GPOEDA y etiquetarla 
+## Esta recodificacion debe quedar en 4 lineas del script
+## La recodificacion es la siguiente:
+
+## 5,6,7 <- 1 <- niñ@s
+## 8,9,10 <- 2 <-pre ado
+## 12,13,14 <- 3 <- ado
+##15,16,17 <- 4 <- joven
+
+##Una vez que haya realizado el ejercicio generar una tabla con datos expandidos 
+##y exportarla a excel
+table(mti2015$EDA)
+mti2015$EDA<-as.character(mti2015$EDA)
+class(mti2015$EDA)
+
+mti2015$GPOEDA[mti2015$EDA=="05"|mti2015$EDA=="06"|mti2015$EDA=="07"]<-1
+mti2015$GPOEDA[mti2015$EDA=="08"|mti2015$EDA=="09"|mti2015$EDA=="10"|mti2015$EDA=="11"]<-2
+mti2015$GPOEDA[mti2015$EDA=="12"|mti2015$EDA=="13"|mti2015$EDA=="14"]<-3
+mti2015$GPOEDA[mti2015$EDA=="15"|mti2015$EDA=="16"|mti2015$EDA=="17"]<-4
+
+######################OTRA FORMA UTILIZANDO RANGOS ############################
+#mti2015$EDA<-as.numeric(as.character(mti2015$EDA))
+# mti2015$GPOEDA[mti2015$EDA>=5 & mti2015$EDA<=7]<-1
+# mti2015$GPOEDA[mti2015$EDA>=8 & mti2015$EDA<=11]<-2
+# mti2015$GPOEDA[mti2015$EDA>=12 & mti2015$EDA<=14]<-3
+# mti2015$GPOEDA[mti2015$EDA>=15 & mti2015$EDA<=17]<-4
+
+table(mti2015$GPOEDA)
+
+mti2015$GPOEDA<-factor(mti2015$GPOEDA,levels=c(1,2,3,4),labels = c("Niño","Pre ado","Ado","Joven"))
+table(mti2015$GPOEDA)
+################ expandir datos ################ 
+require(questionr)
+GPOEDA<- wtd.table(mti2015$GPOEDA,weights = mti2015$FAC_MTI)
+################ exportar a datos ################ 
+save(GPOEDA, file="gpoeda.rda")
+write.csv(GPOEDA, file="gpoeda1.csv")
+
+##### serobles99@gmail.com #####
+########### TAREA EXPORTAR VARIAS TABLAS EN UNA MISMA HOJA DE EXCEL
