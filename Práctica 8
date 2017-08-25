@@ -1,0 +1,14 @@
+############## 25/08/2017
+### EJERCICIO DE RELACION ENTRE 2 VARIABLES
+###############                             grafica de dispersion                      #######################
+
+### CALIFICACIONES Y HORAS DE ESTUDIO DIARIAS
+calificacion<-c(7.7,7.1,10,6,7.5,3.4,9.2,9.8,6.4,8.3)
+hrs<-c(2.1,3.4,5,2.7,1,0.5,4.5,3.2,1.2,2.3)
+
+plot(hrs,calificacion,main = "Grafica de dispersión",
+     xlab ="Horas de estudio diarias",
+     ylab ="Calificación ",
+     sub="Elaboración propia",
+     las=1,
+     font.axis=4)
