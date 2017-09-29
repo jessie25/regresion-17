@@ -1,0 +1,46 @@
+###########ejercicio clase###
+# se busca la relacion de estatura(x) con longitud del salto (y)
+
+
+x<-c(170,172,173,174,174,175,76,177,180,180,180,180,180,181,181,182,182,182,182,184,184,185,186,188)
+y<-c(.84,1.31,1.42,1.03,1.07,1.08,1.04,1.8,1.45,1.60,1.61,2.13,2.15,.84,1.43,.90,1.81,1.94,2.68,1.49,2.52,3.00,1.87,3.08)
+n<-24
+
+#1) determine la ecuacion de la recta de regresion estimada
+Sxy<-(sum(x*y)-(sum(x)*sum(y))/n)
+Sxx<-(sum(x^2)-((sum(x))^2)/n)
+B1<-Sxy/Sxx
+B0<-(mean(y)-(B1*mean(x)))
+
+######otra forma de calcular la beta
+
+mdo1<-lm(y~x)
+summary(mdo1)
+
+names(mdo1)
+mdo1$coefficients[-1]
+mdo1$residuals
+
+y0<-B0+(B1*x)
+
+
+#2) calcule una estimacion puntual del salto horizontal promedio cuando la estatura de la persona es 182
+y0<-B0+(B1*182)
+
+
+#3) calcule los valores de los residuos de los minimos cuadrados de las 4 observaciones con las cuales la estatura es de 182
+mdo1$residuals
+
+valor1<-.90-y0
+valor2<-1.82-y0
+valor3<-1.92-y0
+valor4<-2.68-y0
+
+#4) ¿que proporcion de la variacion observada en el salto horizontal es atribuida a la relacion de reg. lineal simple?
+
+#usando el lm
+# Multiple R-squared:  0.4514
+# es una r^2 baja
+# es de 45% 
+plot(y~x,xlab="estatura",ylab = "salto horizontal", xlim=c(160,190),ylim=c(.80,3.2), main="grafica diagrama de dispersion")
+abline(mdo1,col="pink")
