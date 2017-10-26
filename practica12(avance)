@@ -1,0 +1,125 @@
+## Ahora vamos hacer un ejercicio con un modelo de regresion multiple
+## el ejercicio conciste en tres variables sobre el precio de unas mochilas
+## las var independientes son la capacidad (tamaño) y lacalidad de la mochila 
+## la variable dependiente es el precio de la mochila
+
+## var 1 capacidad (tamaño)
+capa<-c(4330,5500,5550,4700,5200,5500,4700,5500,5800,5000)
+## var 2 calidad
+calidad<-c(2,3,4,3,4,4,4,5,5,5)
+## var 3 (dependiente)
+precio<-c(190,219,249,249,250,340,289,395,439,525)
+
+## lo primero que se hace es declarar una dataframe con las tres variables
+mochila<-data.frame(precio,capa,calidad)
+
+### Un elemento importante en le MRM es conocer las correlaciones 
+### entre las variables, en este caso para la correlacion 
+### se utiliza la funcion cor()
+cor(mochila,use="everything",method = "pearson")
+
+## una ves que observamos las correlaciones en la que se mueetra mayor
+## correlacion del precio con la calidad, aplicamos el modelo
+modmo<-lm(precio~calidad+capa)
+summary(modmo)
+## se usa la r^2 ajustada variablidad,porque concidera las grados de libertad
+##... debido a que es un MRM y esa tiene un valor de .70 lo que implica que la recta
+## de regresion explica en 70% la variabilidad del modelo
+
+######## EN EL ANALISIS DE UN MODELO ARRIBA DEL 60%, YA ES CONCIDERADO UN BUEN
+######## MODELO
+
+## Despues de que tengamos una r2 cuadrada ajustadaa aceptable, se analiza
+## el estadistico F para saber la bondad de ajuste y la calidad del modelo
+## que estamos aplicando
+
+anova(modmo)
+
+## una vez que aplicamos anova se va revisar los valores de estadistico F
+## y los p- value con la finalida de conocer la bondad de ajuste de MRM
+## en este casi se observa que ne la var indep calidad se tiene un estadistico
+## F de 22.49, lo que es un uen estadistico F debido a que se esperan 
+## valores mayores a1, para los p-value se espera un p-value<.05 
+## en este caso la primer car indep cumple con un estadisco F mayor a 1
+## y un p.value<.05 con lo que podriamos decir que la var calidad es significativa
+## en nuestro modelo
+## para el analisis de la variable capacidad, el estadisico F de 1.3 
+## y un p-valu de .28 en este caso podriamos concluir que esta variable
+## no resulta significativa para nuestro modelo, debido a que el estadistico F
+## es apenas mayor a 1 y el p-value es mayor a .05 
+
+## lo siguiente que vamos hacer es realizar el diagnostico de nuestro 
+## modelo a traves de las pruebas formales de shapiro, breusch pagan y 
+## durbin watson
+## para aplicar esta prueba se necesita conocer los valores ajustados, los 
+## reciduos del modelo y los residuos estudentizados
+names(modmo)
+
+mochila$fitted.modmo<- fitted(modmo)
+mochila$residuals.modmo<- residuals(modmo)
+mochila$rstudent.modmo<- rstudent(modmo)
+
+### diagnostico de los supuestos
+### supuesto 1 normalidad
+## para el suupuesto de normalidad se aplica la prueba de shapiro en r
+## la funcion que aplica esta prueba es shapiro.test
+shapiro.test(mochila$rstudent.modmo)
+
+## en esta prueba esperamos un p-value mayor a 0.05 y en ese caso
+# obtenemos un resultado es de 0.5391, con lo que se puede decir que el supuesto
+## de normalidad es aceptado
+## ademas de shapiro se debe de observar graficamente esta prueba a traves de las
+## funciones qq
+qqnorm(mochila$rstudent.modmo)
+qqline(mochila$rstudent.modmo)
+
+##homocedasticidad supuesto
+install.packages("lmtest")
+require(lmtest)
+
+bptest(modmo)
+
+#### supuesto de independencia o correlacion
+## en este caso se aplica la prueba durbin watson, como lo vimos la clase anterior
+## esta prueba se evalua de dos formas, por un lado el valor de durbin watson
+## tiene que estar entre 1.5 y 2.5 ademas de este valor hay que observaar el p value
+## que tiene que ser mayor a .05 para que cumpla con el supusto de independencia
+## de los residuos
+dwtest(modmo,alternative = "two.sided")
+
+#### en este caso obtenemos un durbin watson de 1.87 por lo que podemos decir
+## que cumple el supuesto de independencia y al cumplir las 3 pruebas formales
+## podriamos decir que tenemos un buen modelo y podriamos plantear la ecuacion
+## del modelo
+
+coefficients(modmo)
+### plantear ecuacion
+y=B0+B1x1+B2x2
+
+### ejercicio clase en una financiera se quiere evaluar a los corredores de 
+## bolsa de diferentes empresas, la oferta y desempeño de cada corredor se
+## evalua en 6 areas, empleando para cada una de las areas una escala de 
+## 0 a 5... tres de las areas evaluadas son ejecucion en la operacion ,
+## facilidad de uso y gama de ofertas, Un 5 es la mejor calificacion en las
+## diferentes areas. En los siguietnes datos se presentan las puntuaciones
+## obtenidas
+
+corredor<-c("wall st","etrade1","etrade2", "pre trade", "track", "water house","brown","br america","merill lynch", "strong funds")
+operacion<-c(3.7,3.4,2.5,4.8,4,3,2.7,1.7,2.2,1.4)
+uso<-c(4.5,3,4,3.7,3.5,3,2.5,3.5,2.7,3.6)
+gama<-c(4.8,4.2,4,3.4,3.2,4.6,3.3,3.1,3,2.5)
+califtotal<-c(4,3.5,3.5,3.5,3.5,3.5,3,3,2.5,2)
+##a) determine la ecuacion de reg estimada que se puede usar para predecir
+## la calificacion total segun las evaluaciones obtenidad
+##b)emplee la prueba F para determinar la significancia goblal de la relacion,
+## el nivel de significancia que se requiere es de 95% ¿cual es su conclusion?
+##c)elimine cualquiera de las var indep que no sea significativa para la ec de
+## regresion estimada¿ cual es la ecuacion de regresion estimada que recomedaria
+## compare r2 de los modelos
+modelo<-data.frame(operacion,uso,gama,califtotal)
+cor(modelo,use="everything",method = "pearson")
+model<-lm(califtotal~operacion+uso+gama)
+summary(model)
+anova(model)
+bptest(model)
+dwtest(model,alternative = "two.sided")
