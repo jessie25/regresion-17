@@ -1,0 +1,109 @@
+
+### ejercicio clase en una financiera se quiere evaluar a los corredores de 
+## bolsa de diferentes empresas, la oferta y desempeño de cada corredor se
+## evalua en 6 areas, empleando para cada una de las areas una escala de 
+## 0 a 5... tres de las areas evaluadas son ejecucion en la operacion ,
+## facilidad de uso y gama de ofertas, Un 5 es la mejor calificacion en las
+## diferentes areas. En los siguietnes datos se presentan las puntuaciones
+## obtenidas
+
+corredor<-c("wall st","etrade1","etrade2", "pre trade", "track", "water house","brown","br america","merill lynch", "strong funds")
+operacion<-c(3.7,3.4,2.5,4.8,4,3,2.7,1.7,2.2,1.4)
+uso<-c(4.5,3,4,3.7,3.5,3,2.5,3.5,2.7,3.6)
+gama<-c(4.8,4.2,4,3.4,3.2,4.6,3.3,3.1,3,2.5)
+califtotal<-c(4,3.5,3.5,3.5,3.5,3.5,3,3,2.5,2)
+##a) determine la ecuacion de reg estimada que se puede usar para predecir
+## la calificacion total segun las evaluaciones obtenidad
+modelo<-data.frame(operacion,uso,gama,califtotal)
+model<-lm(califtotal~operacion+uso+gama)
+coefficients(model)
+#ecuacion
+#y=0.3450970+0.2548221x1+0.1324920x2+0.4585190x3
+
+##b)emplee la prueba F para determinar la significancia goblal de la relacion,
+## el nivel de significancia que se requiere es de 95% (p-value menor a .05)
+## ¿cual es su conclusion?
+
+anova(model)
+####### uso: prob=.112803
+####### estadistico F de 29.1789 para la variable independiente operacion
+## y es bueno porque es mayor a 1. Para los p-value es menor a .05 (.001661)
+
+####### estadistico F de 13.8545 para la variable independiente gama
+## y es bueno porque es mayor a 1. Para los p-value es menor a .05 (.009827)
+
+##r2=0.8284 
+
+
+##c)elimine cualquiera de las var indep que no sea significativa para la ec de
+## regresion estimada¿ cual es la ecuacion de regresion estimada que recomedaria
+## compare r2 de los modelos
+
+
+####la variable "uso" no es signnificativa(por los p-value es de .113803)
+modelo2<-data.frame(califtotal,operacion,gama)
+model2<-lm(califtotal~operacion+gama)
+summary(model2)
+anova(model2)
+
+###r2= 0.8311 
+## segun la r2 recomienda que es mejor el modelo con solo dos variables
+## (aunque r2 no es la mejor opcion para determinar que modelo es mejor)
+
+
+################# CON EL ULTIMO MODELO VAMOS A HACER LA PRUEBA DE TODOS
+################# LOS SUPUESTOS
+names(model2)
+###shapiro
+modelo2$fitted.model2<- fitted(model2)
+modelo2$residuals.model2<- residuals(model2)
+modelo2$rstudent.model2<- rstudent(model2)
+shapiro.test(modelo2$rstudent.model2)
+## en esta prueba esperamos un p-value mayor a 0.05 y es de 0.6121, 
+##con lo que se puede decir que el supuesto de normalidad es aceptado
+## observacion grafica
+qqnorm(modelo2$rstudent.model2)
+qqline(modelo2$rstudent.model2)
+
+##homocedasticidad supuesto (homogeneidad)
+install.packages("lmtest")
+require(lmtest)
+bptest(model2)
+#####p-value = 0.1104 (tambien es aceptable )
+
+#### supuesto de independencia o correlacion(durbin watson)
+
+dwtest(model2,alternative = "two.sided")
+
+####durbin watson de 2.4889 y p-value de 0.6228
+### LAS 3 PRUEBAS SON ACPETABLES POR LO TANTO ES UN BUEN MODELO
+
+
+########################## E J E R C I C I O ########################
+# Planterar un MRM de minimo 4 variables independientes
+# a este modelo que planteen van a realizar lo siguiente:
+# 1) analizar la anova para conocer la bondad de ajuste 
+# 2) a traves de los coeficientes detectar las var indep no significativas
+# 3) analizar la r2 para conocer la variabilidad del modelo
+# 4) en dado caso de que haya alguna var indep no significativa
+#    eliminarla y diagnosticar el modelo a traves de las pruebas para
+#    los supuesto
+
+
+
+#####
+pantalon<-c(150,240,100,130,210,200,500,250,310,110)
+materiapr<-c(12.7,15,10,11.6,13.9,13.2,21,15.6,19.4,11.9)
+manofactura<-c(6,12,4,5,10,9.9,16,12.7,14,4.3)
+gastosv<-c(2,3.8,1.6,1.9,3.4,3.1,6.2,3.1,4.9,1.5)
+sueldo<-c(12,10,5,9,16,11,12,10,7,8)
+
+md<-data.frame(pantalon,materiapr,manofactura,gastosv,sueldo)
+md1<-lm(pantalon~materiapr+manofactura+gastosv+sueldo)
+ anova(md1)
+##sueldos es el mas alto en F es menor a 1... se elimina 
+ md2<-data.frame(pantalon,materiapr,manofactura,gastosv)
+ md21<-lm(pantalon~materiapr+manofactura+gastosv)
+ anova(md21)
+ coefficients(md21)
+ 
