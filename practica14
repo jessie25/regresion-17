@@ -1,0 +1,38 @@
+#swiss 
+#medicion estandarizada de la fecundidad e indicadores socioeconomicos para cada
+#una de las 47 provincias francesas hablantes de Suiza al rededor de 1888
+
+require(stats)
+base<-data.frame(swiss)
+#analisis exploratorio
+names(base)
+pairs(base)
+cor(base)
+##propuesta modelo de regresion simple con vase en el analisis exploratorio
+## NO FUNCIONO
+regresion1<-lm(Infant.Mortality~Fertility, data = base)
+
+####modelo propuesto anteriormente 
+nulo<-lm(Fertility ~ 1, data=base) # es el modelo mas simple que podemos tener
+## 
+summary(nulo)
+completo<-lm(Fertility~.,data = base)
+#lm(Fertility~Infant.Mortality+education+examination+agriculture+catholic)
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+summary(completo)
+help(step)
+
+
+library(help="datasets")
+require(datasets);data(quakes); ?quakes
+names(quakes)
+bas1<-data.frame(quakes)
+names(bas1)
+pairs(bas1)
+cor(bas1)
+nul<-lm(lat ~ 1, data=bas1)
+summary(nul)
+completo<-lm(lat~.,data = bas1)
+#lm(Fertility~Infant.Mortality+education+examination+agriculture+catholic)
+step(nul,scope = list(lower=nul,upper=completo),direction = "forward")
+summary(completo)
