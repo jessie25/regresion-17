@@ -1,0 +1,167 @@
+#swiss 
+#medicion estandarizada de la fecundidad e indicadores socioeconomicos para cada
+#una de las 47 provincias francesas hablantes de Suiza al rededor de 1888
+
+require(stats)
+base<-data.frame(swiss)
+#analisis exploratorio
+names(base)
+pairs(base)
+
+#ver relacion(intensidad)
+cor(base)
+##propuesta modelo de regresion simple con vase en el analisis exploratorio
+## NO FUNCIONO
+regresion1<-lm(Infant.Mortality~Fertility, data = base)
+
+####modelo propuesto anteriormente 
+nulo<-lm(Fertility ~ 1, data=base) # es el modelo mas simple que podemos tener
+## variable dependiente, para poder contrastarlo con los otros modelos
+##
+summary(nulo)
+
+completo<-lm(Fertility~.,data = base)
+#hace la variable dependiente, y las demas independientes a traves del punto
+# el modelo mas complejo 
+
+## tenemos los 2 extremos
+##para hacer la comparacion con el modelo AIC
+
+
+#lm(Fertility~Infant.Mortality+education+examination+agriculture+catholic)
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+summary(completo)
+help(step)
+
+
+#elijo em mejor modelo que obtengo del AIC
+MOD1<-lm(formula = Fertility~Education + Catholic + Infant.Mortality + 
+           Agriculture, data = base)
+summary(MOD1)
+#Con la finaliad de observar aspectos basico como la r cuadrada
+#ajustada que nos permite conocer la variabilidad explicada del modelo
+
+#los errores de residuos al standar 7.168, la significancia de las variables
+#son significativas
+#el estadistoc F y el p-value para ver el ajuste del modelo
+#La prueba de hipotesis que se aplica en el estadistico F es
+#Ho: Bo,B2,B2,...Bk=0
+#Ha: al menos un Bj diferente de cero
+
+#Aqui esperamos rechazar la hipotesis nula, por lo que el valor p-value
+#debe ser <.05 y ademas el estadistico F debe ser mayor a 1
+#Al parecer tenemos un buen modelo segun estos indicadores
+
+###################################################################
+###### PASOS QUE REVISAMOS EN EL SUMMARY #####################
+#una vez que elegimos modelo revisamos los siguietnes indicadores del modelo
+
+# R2 ajustada    ---> explica la variabilidad de l modelo(aprox > .65)
+# Error standard ---> cercano a cero
+# significancia de 
+#las variables 
+#independientes  ---> p-value <.05 del estadistico t
+# estadisticos F<1, y p-value <.05
+
+###################################################################
+# PRUEBAS FORMALES DE LOS SUPUESTOS
+#prueba de MRM
+shapiro.test(rstudent(MOD1))
+## prueba shapiro para normalidad 
+#aqui esperamos no rechazar la Ho por lo que el valor de p-value debe ser mayor
+# a .05
+#aqui observamos que no rechazamos la Ho, es deir los errores se distribuyen normal
+
+#prueba breusch pagan
+install.packages("lmtest")
+require(lmtest)
+bptest(MOD1)
+#preuba breusch pagan que permite ver autocorrelacion 
+#aqui esperamos no rechazar la Ho, es decir un p-value mayo a .05, este modelo 
+#nos permite saber que no hay mas de dos variables que aporten lo mismo al modelo
+# en este caso tenemos un p-value .53 por lo que no rechazamos la Ho
+# que es lo que estabamos esperando o se puede decir que este modelo si cumple el 
+#supuesto de autocorrelacion
+
+#prueba de independecia
+dwtest(MOD1,alternative = "two.sided")
+summary(MOD1)
+# La prueba t para Ho: 
+
+
+### INTERPRETACION DE COEFICIENTES
+# el modelo elegido estima que hay una disminucion de .15  en la tasa de 
+# fecundidad por cada aumento de 1% de hombres involucrados en la agricultura
+#manteniendo constante las variables restantes
+#agriculture.. -.1546... coeficiente
+
+# el modelo elegido estima que hay una disminucion de .98 en la tasa de fecundidad
+# cada aumento de 1% de la eduacion manteniendo constnates lasa variables restantes
+#Education... -.9802 coeficientes
+
+# el modelo elegido estima que hay un incremento de .12 en la tasa de fecundidad
+#cada aumento de 1% de la pob catolica mantendiendo constantes las variables restantes
+#catholic... .1202 ...coeficiente
+
+#el modelo elegido estima que hay un incremento de 1.07 en la tasa de fecundidad
+# cada aumento de 1% de mortalidad infantil manteniendo 
+##Infant.Mortality... 1.07844.. coeficiente
+
+
+###############################################################################
+#############################################################################
+## EJERCICIO
+bass<-data.frame(Seatbelts)
+names(bass)
+pairs(bass)
+
+#ver relacion(intensidad)
+cor(bass)
+
+nulo<-lm(drivers ~ 1, data=bass)
+# es el modelo mas simple que podemos tener
+## variable dependiente, para poder contrastarlo con los otros modelos
+summary(nulo)
+
+completo<-lm(drivers~.,data = bass)
+#hace la variable dependiente, y las demas independientes a traves del punto
+# el modelo mas complejo 
+
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+summary(completo)
+
+#elijo em mejor modelo que obtengo del AIC
+modelo1<-lm(formula = drivers ~ DriversKilled + front + rear + law + VanKilled, data = bass)
+summary(modelo1)
+
+#los errores de residuos al standar 7.168, la significancia de las variables
+#son significativas
+#el estadistoc F y el p-value para ver el ajuste del modelo
+#La prueba de hipotesis que se aplica en el estadistico F es
+#Ho: Bo,B2,B2,...Bk=0
+#Ha: al menos un Bj diferente de cero
+
+#Aqui esperamos rechazar la hipotesis nula, por lo que el valor p-value
+#debe ser <.05 y ademas el estadistico F debe ser mayor a 1
+#Al parecer tenemos un buen modelo segun estos indicadores
+
+# PRUEBAS FORMALES DE LOS SUPUESTOS
+#prueba de MRM
+shapiro.test(rstudent(modelo1))
+## prueba shapiro para normalidad 
+#aqui esperamos no rechazar la Ho por lo que el valor de p-value debe ser mayor
+# a .05
+#aqui observamos que no rechazamos la Ho, es deir los errores se distribuyen normal
+
+#prueba breusch pagan
+bptest(modelo1)
+#preuba breusch pagan que permite ver autocorrelacion 
+#aqui esperamos no rechazar la Ho, es decir un p-value mayo a .05, este modelo 
+#nos permite saber que no hay mas de dos variables que aporten lo mismo al modelo
+# en este caso tenemos un p-value .0298 por lo que rechazamos la Ho
+# que es lo que NO estabamos esperando, o se puede decir que este modelo no 
+#cumple el supuesto de autocorrelacion
+
+#prueba de independecia
+dwtest(modelo1,alternative = "two.sided")
+summary(modelo1)
