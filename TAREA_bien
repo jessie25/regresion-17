@@ -1,0 +1,56 @@
+####################### TAREA #####################
+
+require(datasets);data(quakes); ?quakes
+names(quakes)
+base<-data.frame(quakes)
+names(base)
+pairs(base)
+cor(base)
+nulo<-lm(lat ~ 1, data=base)
+summary(nulo)
+completo<-lm(lat~.,data = base)
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+summary(completo)
+mdo1<-lm(formula = lat ~ long + mag + stations, data = base)
+summary(mdo1)
+#Con la finaliad de observar aspectos basico como la r cuadrada
+#ajustada que nos permite conocer la variabilidad explicada del modelo
+
+#los errores de residuos al standar 4.593, la significancia de 
+#las variables son significativas  
+#el estadistoc F y el p-value para ver el ajuste del modelo
+#r ajustada= 0.1658 
+#error residual= 4.593
+#p-value: < 2.2e-16
+
+
+# PRUEBAS FORMALES DE LOS SUPUESTOS
+#prueba de MRM
+shapiro.test(rstudent(mdo1))
+#p-value < 2.2e-16
+
+#prueba breusch pagan
+install.packages("lmtest")
+require(lmtest)
+bptest(mdo1)
+#p-value = 0.0002503
+
+#prueba de independecia
+dwtest(mdo1,alternative = "two.sided")
+summary(mdo1)
+#p-value = 0.06828
+#DW = 1.885
+## se acepta el DW esta entre 1.5 y 2.5
+
+
+############################################################
+#INTERPRETACION DE COEFICIENTES
+#Por una unidad que aumenta la latidud de un evento de un terremoto, la longitud 
+#esta explicada por una disminucion de 0.34193 en esa variable
+
+#Por una unidad que aumenta la latidud de un evento de un terremoto, la magnitud 
+#en la escal de Richter esta explicada por una disminucion de
+#4.58634 en esa variable
+
+#Por una unidad que aumenta la latidud de un evento de un terremoto, el numero de reporte de las estaciones
+#esta explicada por un aumento de 0.06621
