@@ -1,0 +1,50 @@
+#base 2
+#donde
+#ap: precio promedio
+# cpc: consumo por cliente
+
+city<-c("amarillo", "bor","dal","sham","roy","tex"," corp","pal","mars","low","palo",",mill",
+        "mem","gran","llano", "brown","merc","kar","mat","laP")
+ap<-c(30,31,37,42,43,45,50,54,54,57,58,58,60,73,88,89,92,97,100,102)
+cpc<-c(134,112,136,109,105,87,56,43,77,35,65,56,58,55,49,39,36,46,40,42)
+prima<-c(200,205,198,315,211,310,200,306,245,287,298,264,255,306,315,222,244,158,166,216)
+
+##generen 3 modelos con los datos anteriores
+# 1.- para cada modelo encuentre el valor de R2 y AIC y genere una grafica residual 
+#     comente sobre la adecuacion de los tres modelos
+
+base<-data.frame(ap,cpc,prima)
+
+########MODELO 1
+mdo1<-lm(ap~cpc+prima,data=base)
+summary(mdo1)
+#Adjusted R-squared:  0.6663
+#Residual standard error: 13.69 on 17 degrees of freedom
+AIC(mdo1)
+#166.1664
+plot(mdo1$residuals)
+
+mdo2<-lm(ap~prima,data=base)
+summary(mdo2)
+#Adjusted R-squared:  -0.02649 
+#Residual standard error: 24.01 on 18 degrees of freedom
+AIC(mdo2)
+#187.7846
+plot(mdo2$residuals)
+
+mdo3<-lm(ap~cpc,data=base)
+summary(mdo3)
+#Adjusted R-squared:  0.6033
+#Residual standard error: 14.93 on 18 degrees of freedom
+AIC(mdo3)
+#168.7725
+plot(mdo3$residuals)
+
+##### EL MEJOR MODELO ES EL QUE RELACIONA CPC Y LA PRIMA, pues el AIC es el mas bajo
+#la R2 es de .66 (la mas alta) y la grafica de residuales es la mas dispersa 
+#por lo tanto es la mejor
+predict(mdo1,data.frame(cpc=40,prima),interval = "predict")
+predict(mdo1,data.frame(cpc=60,prima),interval = "predict")
+predict(mdo1,data.frame(cpc=80,prima),interval = "predict")
+predict(mdo1,data.frame(cpc=100,prima),interval = "predict")
+predict(mdo1,data.frame(cpc=120,prima),interval = "predict")
