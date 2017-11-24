@@ -1,0 +1,41 @@
+###---------------------------------------------------------------ejericio
+
+#Analiis de entrega de productos
+#se utiliza tiempo de var dep para decirle a los clietnes cuanto va tardar en llegar el 
+#producto. Saben que las var que impactan en el tiempo de entrega son la distancia y
+# el numero de cajas
+ncajas<-c(10,15,10,20,25,18,12,14,16,22,24,17,13,30,24)
+distancia<-c(30,25,40,18,22,31,26,34,29,37,20,25,27,23,33)
+tiempo<-c(24,27,29,31,25,33,26,28,31,39,33,30,25,42,40)
+
+bas<-data.frame(tiempo,ncajas,distancia)
+bas<-bas[-5,]
+bas
+pairs(bas)
+cor(bas)
+nulo<-lm(tiempo~1,data = bas)
+completo<-lm(tiempo~.,data = bas)
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+
+modelo<-lm(formula = tiempo ~ ncajas + distancia, data = bas)
+summary(modelo)
+#Adjusted R-squared: 0.9627 
+#p-value: 5.533e-09
+
+##pruebas formales
+shapiro.test(rstudent(modelo))
+#p-value = 0.1944
+
+install.packages("lmtest")
+require(lmtest)
+bptest(modelo)
+#p-value = 0.5951
+
+##independecian entre los residuos 
+dwtest(modelo,alternative = "two.sided")
+#p-value = 0.1644
+
+##cumple con todos los supuestos
+
+#ecuacion del modelo
+#y=2.91517+(1.00314)x1 + 0.38045x2 + e
