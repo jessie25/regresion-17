@@ -1,0 +1,16 @@
+# Aguascalientes, Coahuila, Guanajuato, Nuevo León, Querétaro,
+#San Luis Potosí, Tamaulipas y Zacatecas.
+
+install.packages("tidyverse")
+library(readxl)
+ag_sexo<-data.frame(read_excel("C:/Users/Alumno.SALAE-26/Desktop/aguascalientes_Sexo.xlsx"))
+ag_gpo1<-data.frame(read_excel("C:/Users/Alumno.SALAE-26/Desktop/aguascalientes_grupoEdad.xlsx"))
+
+ag_gpo<-data.frame(ag_gpo1$Sección,ag_gpo1$Grupos.de.Edad,ag_gpo1$Padrón.Electoral,ag_gpo1$Lista.Nominal)
+names(ag_gpo)
+
+install.packages("plyr")
+library("plyr")
+ad<-group_by(ag_gpo,ag_gpo1$Padrón.Electoral)
+
+#https://mauricioanderson.com/curso-r-dplyr/
